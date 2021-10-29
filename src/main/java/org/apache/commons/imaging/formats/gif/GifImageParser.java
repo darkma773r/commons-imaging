@@ -38,12 +38,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.imaging.FormatCompliance;
+import org.apache.commons.imaging.GenericImageParser;
 import org.apache.commons.imaging.ImageFormat;
 import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.ImageInfo;
-import org.apache.commons.imaging.ImageParser;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.BinaryOutputStream;
 import org.apache.commons.imaging.common.ImageBuilder;
 import org.apache.commons.imaging.common.ImageMetadata;
@@ -55,7 +56,7 @@ import org.apache.commons.imaging.common.mylzw.MyLzwDecompressor;
 import org.apache.commons.imaging.palette.Palette;
 import org.apache.commons.imaging.palette.PaletteFactory;
 
-public class GifImageParser extends ImageParser<GifImagingParameters> implements XmpEmbeddable {
+public class GifImageParser extends GenericImageParser<XmpImagingParameters> implements XmpEmbeddable {
 
     private static final Logger LOGGER = Logger.getLogger(GifImageParser.class.getName());
 
@@ -90,6 +91,7 @@ public class GifImageParser extends ImageParser<GifImagingParameters> implements
     };
 
     public GifImageParser() {
+        super(XmpImagingParameters.class);
         super.setByteOrder(ByteOrder.LITTLE_ENDIAN);
     }
 
@@ -473,13 +475,13 @@ public class GifImageParser extends ImageParser<GifImagingParameters> implements
     }
 
     @Override
-    public byte[] getICCProfileBytes(final ByteSource byteSource, final GifImagingParameters params)
+    protected byte[] getICCProfileBytesInternal(final ByteSource byteSource, final XmpImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     @Override
-    public Dimension getImageSize(final ByteSource byteSource, final GifImagingParameters params)
+    protected Dimension getImageSizeInternal(final ByteSource byteSource, final XmpImagingParameters params)
             throws ImageReadException, IOException {
         final GifImageContents blocks = readFile(byteSource, false);
 
@@ -521,7 +523,7 @@ public class GifImageParser extends ImageParser<GifImagingParameters> implements
     }
 
     @Override
-    public ImageMetadata getMetadata(final ByteSource byteSource, final GifImagingParameters params)
+    protected ImageMetadata getMetadataInternal(final ByteSource byteSource, final XmpImagingParameters params)
             throws ImageReadException, IOException {
         final GifImageContents imageContents = readFile(byteSource, false);
 
@@ -554,7 +556,7 @@ public class GifImageParser extends ImageParser<GifImagingParameters> implements
     }
 
     @Override
-    public ImageInfo getImageInfo(final ByteSource byteSource, final GifImagingParameters params)
+    protected ImageInfo getImageInfoInternal(final ByteSource byteSource, final XmpImagingParameters params)
             throws ImageReadException, IOException {
         final GifImageContents blocks = readFile(byteSource, false);
 
@@ -812,7 +814,7 @@ public class GifImageParser extends ImageParser<GifImagingParameters> implements
     }
 
     @Override
-    public BufferedImage getBufferedImage(final ByteSource byteSource, final GifImagingParameters params)
+    protected BufferedImage getBufferedImageInternal(final ByteSource byteSource, final XmpImagingParameters params)
             throws ImageReadException, IOException {
         final GifImageContents imageContents = readFile(byteSource, false);
 
@@ -839,7 +841,7 @@ public class GifImageParser extends ImageParser<GifImagingParameters> implements
     }
 
     @Override
-    public void writeImage(final BufferedImage src, final OutputStream os, GifImagingParameters params)
+    protected void writeImageInternal(final BufferedImage src, final OutputStream os, XmpImagingParameters params)
             throws ImageWriteException, IOException {
 
         String xmpXml = params.getXmpXml();
@@ -1130,5 +1132,15 @@ public class GifImageParser extends ImageParser<GifImagingParameters> implements
             }
             return result.get(0);
         }
+    }
+
+    @Override
+    protected XmpImagingParameters createDefaultParameters() {
+        return new XmpImagingParameters();
+    }
+
+    @Override
+    protected XmpImagingParameters createParameters(final ImagingParameters params) {
+        return new XmpImagingParameters(params);
     }
 }

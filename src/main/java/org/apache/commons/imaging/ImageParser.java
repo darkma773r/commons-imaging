@@ -82,15 +82,13 @@ import org.apache.commons.imaging.formats.xpm.XpmImageParser;
  * <h3>The "params" argument</h3>
  *
  * <p>Many of the methods specified by this class accept an argument of
- * type {@code T} defining the parameters to be used when
+ * type {@code ImagingParameters} defining the parameters to be used when
  * processing an image. For example, some of the output formats permit
- * of different kinds of image compression or color models. Some of the
+ * use of different kinds of image compression or color models. Some of the
  * reading methods permit the calling application to require strict
  * format compliance.</p>
- *
- * @param <T> type of parameters used by this image parser
  */
-public abstract class ImageParser<T extends ImagingParameters> extends BinaryFileParser {
+public abstract class ImageParser extends BinaryFileParser {
 
     private static final Logger LOGGER = Logger.getLogger(ImageParser.class.getName());
 
@@ -99,7 +97,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *
      * @return A valid array of image parsers
      */
-    public static List<ImageParser<?>> getAllImageParsers() {
+    public static List<ImageParser> getAllImageParsers() {
         return Arrays.asList(
                 new BmpImageParser(),
                 new DcxImageParser(),
@@ -165,7 +163,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            implementation.
      * @throws IOException        In the event of unsuccessful data read operation.
      */
-    public abstract ImageMetadata getMetadata(ByteSource byteSource, T params)
+    public abstract ImageMetadata getMetadata(ByteSource byteSource, ImagingParameters params)
             throws ImageReadException, IOException;
 
     /**
@@ -211,7 +209,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful data read operation.
      */
-    public final ImageMetadata getMetadata(final byte[] bytes, final T params)
+    public final ImageMetadata getMetadata(final byte[] bytes, final ImagingParameters params)
             throws ImageReadException, IOException {
         return getMetadata(new ByteSourceArray(bytes), params);
     }
@@ -260,7 +258,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      * @throws IOException        In the event of unsuccessful file read or
      *                            access operation.
      */
-    public final ImageMetadata getMetadata(final File file, final T params)
+    public final ImageMetadata getMetadata(final File file, final ImagingParameters params)
             throws ImageReadException, IOException {
         if (LOGGER.isLoggable(Level.FINEST)) {
             LOGGER.finest(getName() + ".getMetadata" + ": " + file.getName());
@@ -297,7 +295,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful data access operation.
      */
-    public abstract ImageInfo getImageInfo(ByteSource byteSource, T params)
+    public abstract ImageInfo getImageInfo(ByteSource byteSource, ImagingParameters params)
             throws ImageReadException, IOException;
 
     /**
@@ -343,7 +341,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      * @throws IOException        In the event of unsuccessful data
      *                            access operation.
      */
-    public final ImageInfo getImageInfo(final byte[] bytes, final T params)
+    public final ImageInfo getImageInfo(final byte[] bytes, final ImagingParameters params)
             throws ImageReadException, IOException {
         return getImageInfo(new ByteSourceArray(bytes), params);
     }
@@ -372,7 +370,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      * @throws IOException        In the event of unsuccessful file read or
      *                            access operation.
      */
-    public final ImageInfo getImageInfo(final File file, final T params)
+    public final ImageInfo getImageInfo(final File file, final ImagingParameters params)
             throws ImageReadException, IOException {
         if (!canAcceptExtension(file)) {
             return null;
@@ -500,7 +498,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful read or access operation.
      */
-    public abstract BufferedImage getBufferedImage(ByteSource byteSource, T params)
+    public abstract BufferedImage getBufferedImage(ByteSource byteSource, ImagingParameters params)
             throws ImageReadException, IOException;
 
     /**
@@ -518,7 +516,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful read or access operation.
      */
-    public final BufferedImage getBufferedImage(final byte[] bytes, final T params)
+    public final BufferedImage getBufferedImage(final byte[] bytes, final ImagingParameters params)
             throws ImageReadException, IOException {
         return getBufferedImage(new ByteSourceArray(bytes), params);
     }
@@ -538,7 +536,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful read or access operation.
      */
-    public final BufferedImage getBufferedImage(final File file, final T params)
+    public final BufferedImage getBufferedImage(final File file, final ImagingParameters params)
             throws ImageReadException, IOException {
         if (!canAcceptExtension(file)) {
             return null;
@@ -566,7 +564,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      * @throws IOException         In the event of an write error from
      *                             the output stream.
      */
-    public void writeImage(final BufferedImage src, final OutputStream os, T params)
+    public void writeImage(final BufferedImage src, final OutputStream os, ImagingParameters params)
             throws ImageWriteException, IOException {
         os.close(); // we are obligated to close stream.
 
@@ -600,7 +598,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful read or access operation.
      */
-    public final Dimension getImageSize(final byte[] bytes, final T params)
+    public final Dimension getImageSize(final byte[] bytes, final ImagingParameters params)
             throws ImageReadException, IOException {
         return getImageSize(new ByteSourceArray(bytes), params);
     }
@@ -631,7 +629,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful read or access operation.
      */
-    public final Dimension getImageSize(final File file, final T params)
+    public final Dimension getImageSize(final File file, final ImagingParameters params)
             throws ImageReadException, IOException {
 
         if (!canAcceptExtension(file)) {
@@ -653,7 +651,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful read or access operation.
      */
-    public abstract Dimension getImageSize(ByteSource byteSource, T params)
+    public abstract Dimension getImageSize(ByteSource byteSource, ImagingParameters params)
             throws ImageReadException, IOException;
 
     /**
@@ -686,7 +684,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful read or access operation.
      */
-    public final byte[] getICCProfileBytes(final byte[] bytes, final T params)
+    public final byte[] getICCProfileBytes(final byte[] bytes, final ImagingParameters params)
             throws ImageReadException, IOException {
         return getICCProfileBytes(new ByteSourceArray(bytes), params);
     }
@@ -721,7 +719,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful read or access operation.
      */
-    public final byte[] getICCProfileBytes(final File file, final T params)
+    public final byte[] getICCProfileBytes(final File file, final ImagingParameters params)
             throws ImageReadException, IOException {
         if (!canAcceptExtension(file)) {
             return null;
@@ -748,7 +746,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      *                            parser implementation.
      * @throws IOException        In the event of unsuccessful read or access operation.
      */
-    public abstract byte[] getICCProfileBytes(ByteSource byteSource, T params)
+    public abstract byte[] getICCProfileBytes(ByteSource byteSource, ImagingParameters params)
             throws ImageReadException, IOException;
 
     /**
@@ -923,7 +921,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      * @param params optional parameters.
      * @return A valid instance of an implementation of a IBufferedImageFactory.
      */
-    protected BufferedImageFactory getBufferedImageFactory(final T params) {
+    protected BufferedImageFactory getBufferedImageFactory(final ImagingParameters params) {
         if (params == null) {
             return new SimpleBufferedImageFactory();
         }
@@ -946,7 +944,7 @@ public abstract class ImageParser<T extends ImagingParameters> extends BinaryFil
      * @return If the params specify strict format compliance, true;
      *         otherwise, false.
      */
-    public static <T extends ImagingParameters> boolean isStrict(final T params) {
+    public static boolean isStrict(final ImagingParameters params) {
         return params.isStrict();
     }
 }

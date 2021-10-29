@@ -40,6 +40,7 @@ import org.apache.commons.imaging.ImageParser;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.PixelDensity;
 import org.apache.commons.imaging.common.BinaryOutputStream;
 import org.apache.commons.imaging.common.ImageMetadata;
@@ -48,7 +49,7 @@ import org.apache.commons.imaging.formats.bmp.BmpImageParser;
 import org.apache.commons.imaging.palette.PaletteFactory;
 import org.apache.commons.imaging.palette.SimplePalette;
 
-public class IcoImageParser extends ImageParser<IcoImagingParameters> {
+public class IcoImageParser extends ImageParser {
     private static final String DEFAULT_EXTENSION = ImageFormats.ICO.getDefaultExtension();
     private static final String[] ACCEPTED_EXTENSIONS = ImageFormats.ICO.getExtensions();
 
@@ -79,28 +80,28 @@ public class IcoImageParser extends ImageParser<IcoImagingParameters> {
 
     // TODO should throw UOE
     @Override
-    public ImageMetadata getMetadata(final ByteSource byteSource, final IcoImagingParameters params)
+    public ImageMetadata getMetadata(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     // TODO should throw UOE
     @Override
-    public ImageInfo getImageInfo(final ByteSource byteSource, final IcoImagingParameters params)
+    public ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     // TODO should throw UOE
     @Override
-    public Dimension getImageSize(final ByteSource byteSource, final IcoImagingParameters params)
+    public Dimension getImageSize(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     // TODO should throw UOE
     @Override
-    public byte[] getICCProfileBytes(final ByteSource byteSource, final IcoImagingParameters params)
+    public byte[] getICCProfileBytes(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
@@ -568,7 +569,7 @@ public class IcoImageParser extends ImageParser<IcoImagingParameters> {
 
     @Override
     public final BufferedImage getBufferedImage(final ByteSource byteSource,
-            final IcoImagingParameters params) throws ImageReadException, IOException {
+            final ImagingParameters params) throws ImageReadException, IOException {
         final ImageContents contents = readImage(byteSource);
         final FileHeader fileHeader = contents.fileHeader;
         if (fileHeader.iconCount > 0) {
@@ -620,7 +621,7 @@ public class IcoImageParser extends ImageParser<IcoImagingParameters> {
     // }
 
     @Override
-    public void writeImage(final BufferedImage src, final OutputStream os, IcoImagingParameters params)
+    public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
         final PixelDensity pixelDensity = params.getPixelDensity();
 

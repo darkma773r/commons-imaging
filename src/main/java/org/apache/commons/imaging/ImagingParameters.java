@@ -52,6 +52,22 @@ public class ImagingParameters {
      */
     private PixelDensity pixelDensity;
 
+    /**
+     * Default constructor.
+     */
+    public ImagingParameters() {}
+
+    /**
+     * Copy constructor.
+     * @param other
+     */
+    public ImagingParameters(final ImagingParameters other) {
+        this.strict = other.strict;
+        this.fileName = other.fileName;
+        this.bufferedImageFactory = other.bufferedImageFactory;
+        this.pixelDensity = other.pixelDensity;
+    }
+
     // getters and setters
 
     public boolean isStrict() {

@@ -27,6 +27,18 @@ public class XmpImagingParameters extends ImagingParameters {
 
     private String xmpXml;
 
+    public XmpImagingParameters() {}
+
+    public XmpImagingParameters(final ImagingParameters other) {
+        super(other);
+
+        if (other instanceof XmpImagingParameters) {
+            XmpImagingParameters otherXmp = (XmpImagingParameters) other;
+
+            this.xmpXml = otherXmp.xmpXml;
+        }
+    }
+
     public String getXmpXml() {
         return xmpXml;
     }

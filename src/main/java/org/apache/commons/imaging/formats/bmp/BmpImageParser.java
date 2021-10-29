@@ -41,6 +41,7 @@ import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageParser;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.PixelDensity;
 import org.apache.commons.imaging.common.BinaryOutputStream;
 import org.apache.commons.imaging.common.ImageBuilder;
@@ -49,7 +50,7 @@ import org.apache.commons.imaging.common.bytesource.ByteSource;
 import org.apache.commons.imaging.palette.PaletteFactory;
 import org.apache.commons.imaging.palette.SimplePalette;
 
-public class BmpImageParser extends ImageParser<BmpImagingParameters> {
+public class BmpImageParser extends ImageParser {
 
     private static final Logger LOGGER = Logger.getLogger(BmpImageParser.class.getName());
 
@@ -480,13 +481,13 @@ public class BmpImageParser extends ImageParser<BmpImagingParameters> {
     }
 
     @Override
-    public byte[] getICCProfileBytes(final ByteSource byteSource, final BmpImagingParameters params)
+    public byte[] getICCProfileBytes(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     @Override
-    public Dimension getImageSize(final ByteSource byteSource, final BmpImagingParameters params)
+    public Dimension getImageSize(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final BmpHeaderInfo bhi = readBmpHeaderInfo(byteSource);
 
@@ -495,7 +496,7 @@ public class BmpImageParser extends ImageParser<BmpImagingParameters> {
     }
 
     @Override
-    public ImageMetadata getMetadata(final ByteSource byteSource, final BmpImagingParameters params)
+    public ImageMetadata getMetadata(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         // TODO this should throw UnsupportedOperationException, but RoundtripTest has to be refactored completely before this can be changed
         return null;
@@ -525,7 +526,7 @@ public class BmpImageParser extends ImageParser<BmpImagingParameters> {
     }
 
     @Override
-    public ImageInfo getImageInfo(final ByteSource byteSource, final BmpImagingParameters params)
+    public ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         BmpImageContents ic = null;
         try (InputStream is = byteSource.getInputStream()) {
@@ -607,14 +608,14 @@ public class BmpImageParser extends ImageParser<BmpImagingParameters> {
     }
 
     @Override
-    public BufferedImage getBufferedImage(final ByteSource byteSource, final BmpImagingParameters params)
+    public BufferedImage getBufferedImage(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         try (InputStream is = byteSource.getInputStream()) {
             return getBufferedImage(is, params);
         }
     }
 
-    public BufferedImage getBufferedImage(final InputStream inputStream, final BmpImagingParameters params)
+    public BufferedImage getBufferedImage(final InputStream inputStream, final ImagingParameters params)
             throws ImageReadException, IOException {
         final BmpImageContents ic = readImageContents(inputStream, FormatCompliance.getDefault());
 
@@ -641,7 +642,7 @@ public class BmpImageParser extends ImageParser<BmpImagingParameters> {
     }
 
     @Override
-    public void writeImage(final BufferedImage src, final OutputStream os, final BmpImagingParameters params)
+    public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
         PixelDensity pixelDensity = params.getPixelDensity();
 

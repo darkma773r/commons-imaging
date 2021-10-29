@@ -26,6 +26,7 @@ import java.util.Collection;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.ImagingTestConstants;
 import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
 import org.junit.jupiter.api.Assertions;
@@ -43,7 +44,7 @@ public class BmpReadTest extends BmpBaseTest {
     @ParameterizedTest
     @MethodSource("data")
     public void testImageInfo(final File imageFile) throws ImageReadException, IOException {
-        final BmpImagingParameters params = new BmpImagingParameters();
+        final ImagingParameters params = new ImagingParameters();
         final ImageInfo imageInfo = Imaging.getImageInfo(imageFile, params);
         assertNotNull(imageInfo);
         // TODO assert more

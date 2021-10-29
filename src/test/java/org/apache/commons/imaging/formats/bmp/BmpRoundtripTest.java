@@ -29,6 +29,7 @@ import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.internal.Debug;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
@@ -138,7 +139,7 @@ public class BmpRoundtripTest extends BmpBaseTest {
             ImageReadException, ImageWriteException {
         final BufferedImage srcImage = imageDataToBufferedImage(rawData);
 
-        final BmpImagingParameters writeParams = new BmpImagingParameters();
+        final ImagingParameters writeParams = new ImagingParameters();
         // writeParams.put(ImagingConstants.PARAM_KEY_FORMAT,
         // ImageFormat.IMAGE_FORMAT_BMP);
         // writeParams.put(PngConstants.PARAM_KEY_BMP_FORCE_TRUE_COLOR,

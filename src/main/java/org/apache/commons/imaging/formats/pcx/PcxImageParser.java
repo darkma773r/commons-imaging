@@ -40,16 +40,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 
+import org.apache.commons.imaging.GenericImageParser;
 import org.apache.commons.imaging.ImageFormat;
 import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.ImageInfo;
-import org.apache.commons.imaging.ImageParser;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.bytesource.ByteSource;
 
-public class PcxImageParser extends ImageParser<PcxImagingParameters> {
+public class PcxImageParser extends GenericImageParser<PcxImagingParameters> {
     // ZSoft's official spec is at http://www.qzx.com/pc-gpe/pcx.txt
     // (among other places) but it's pretty thin. The fileformat.fine document
     // at http://www.fileformat.fine/format/pcx/egff.htm is a little better
@@ -66,6 +67,7 @@ public class PcxImageParser extends ImageParser<PcxImagingParameters> {
     private static final String[] ACCEPTED_EXTENSIONS = ImageFormats.PCX.getExtensions();
 
     public PcxImageParser() {
+        super(PcxImagingParameters.class);
         super.setByteOrder(ByteOrder.LITTLE_ENDIAN);
     }
 
@@ -91,13 +93,13 @@ public class PcxImageParser extends ImageParser<PcxImagingParameters> {
     }
 
     @Override
-    public ImageMetadata getMetadata(final ByteSource byteSource, final PcxImagingParameters params)
+    protected ImageMetadata getMetadataInternal(final ByteSource byteSource, final PcxImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     @Override
-    public ImageInfo getImageInfo(final ByteSource byteSource, final PcxImagingParameters params)
+    protected ImageInfo getImageInfoInternal(final ByteSource byteSource, final PcxImagingParameters params)
             throws ImageReadException, IOException {
         final PcxHeader pcxHeader = readPcxHeader(byteSource);
         final Dimension size = getImageSize(byteSource, params);
@@ -124,7 +126,7 @@ public class PcxImageParser extends ImageParser<PcxImagingParameters> {
     }
 
     @Override
-    public Dimension getImageSize(final ByteSource byteSource, final PcxImagingParameters params)
+    protected Dimension getImageSizeInternal(final ByteSource byteSource, final PcxImagingParameters params)
             throws ImageReadException, IOException {
         final PcxHeader pcxHeader = readPcxHeader(byteSource);
         final int xSize = pcxHeader.xMax - pcxHeader.xMin + 1;
@@ -139,7 +141,7 @@ public class PcxImageParser extends ImageParser<PcxImagingParameters> {
     }
 
     @Override
-    public byte[] getICCProfileBytes(final ByteSource byteSource, final PcxImagingParameters params)
+    protected byte[] getICCProfileBytesInternal(final ByteSource byteSource, final PcxImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
@@ -470,7 +472,7 @@ public class PcxImageParser extends ImageParser<PcxImagingParameters> {
     }
 
     @Override
-    public final BufferedImage getBufferedImage(final ByteSource byteSource,
+    protected BufferedImage getBufferedImageInternal(final ByteSource byteSource,
             PcxImagingParameters params) throws ImageReadException, IOException {
         try (InputStream is = byteSource.getInputStream()) {
             final PcxHeader pcxHeader = readPcxHeader(is, params.isStrict());
@@ -479,8 +481,18 @@ public class PcxImageParser extends ImageParser<PcxImagingParameters> {
     }
 
     @Override
-    public void writeImage(final BufferedImage src, final OutputStream os, final PcxImagingParameters params)
+    protected void writeImageInternal(final BufferedImage src, final OutputStream os, final PcxImagingParameters params)
             throws ImageWriteException, IOException {
         new PcxWriter(params).writeImage(src, os);
+    }
+
+    @Override
+    protected PcxImagingParameters createDefaultParameters() {
+        return new PcxImagingParameters();
+    }
+
+    @Override
+    protected PcxImagingParameters createParameters(final ImagingParameters params) {
+        return new PcxImagingParameters(params);
     }
 }

@@ -27,6 +27,20 @@ public class PcxImagingParameters extends ImagingParameters {
     private int bitDepth = -1;
     private int compression = PcxConstants.PCX_COMPRESSION_UNCOMPRESSED;
 
+    public PcxImagingParameters() {}
+
+    public PcxImagingParameters(final ImagingParameters other) {
+        super(other);
+
+        if (other instanceof PcxImagingParameters) {
+            PcxImagingParameters otherPcx = (PcxImagingParameters) other;
+
+            this.planes = otherPcx.planes;
+            this.bitDepth = otherPcx.bitDepth;
+            this.compression = otherPcx.compression;
+        }
+    }
+
     public int getPlanes() {
         return planes;
     }

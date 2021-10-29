@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.ImagingParameters;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -69,7 +70,7 @@ public class IcnsReadTest extends IcnsBaseTest {
     @ParameterizedTest
     @MethodSource("data")
     public void testImageInfo(final File imageFile) throws Exception {
-        final ImageInfo imageInfo = Imaging.getImageInfo(imageFile, new IcnsImagingParameters());
+        final ImageInfo imageInfo = Imaging.getImageInfo(imageFile, new ImagingParameters());
         assertNotNull(imageInfo);
     }
 

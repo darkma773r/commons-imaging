@@ -161,7 +161,7 @@ public final class Imaging {
 
         final String normalizedFilename = fileName.toLowerCase(Locale.ENGLISH);
 
-        for (final ImageParser<?> imageParser : ImageParser.getAllImageParsers()) {
+        for (final ImageParser imageParser : ImageParser.getAllImageParsers()) {
             for (final String extension : imageParser.getAcceptedExtensions()) {
                 if (normalizedFilename.endsWith(extension.toLowerCase(Locale.ENGLISH))) {
                     return true;
@@ -554,12 +554,9 @@ public final class Imaging {
         return getICCProfileBytes(new ByteSourceFile(file), params);
     }
 
-    private static <T extends ImagingParameters> byte[] getICCProfileBytes(final ByteSource byteSource, final T params)
-            throws ImageReadException, IOException {
-        // TODO: better generics or redesign API
-        @SuppressWarnings("unchecked")
-        final ImageParser<T> imageParser = (ImageParser<T>) getImageParser(byteSource);
-
+    private static <T extends ImagingParameters> byte[] getICCProfileBytes(final ByteSource byteSource,
+            final ImagingParameters params) throws ImageReadException, IOException {
+        final ImageParser imageParser = getImageParser(byteSource);
         return imageParser.getICCProfileBytes(byteSource, params);
     }
 
@@ -736,20 +733,17 @@ public final class Imaging {
     }
 
     // See getImageParser
-    @SuppressWarnings("unchecked")
-    private static ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params) throws ImageReadException, IOException {
+    private static ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params)
+            throws ImageReadException, IOException {
         return Imaging.getImageParser(byteSource).getImageInfo(byteSource, params);
     }
 
-    // TODO: We have no way of knowing whether the returned ImageParser will accept the ImagingParameters,
-    // even if we specified generic types for the static methods.
-    @SuppressWarnings("rawtypes")
     private static ImageParser getImageParser(final ByteSource byteSource) throws ImageReadException, IOException {
         final ImageFormat format = guessFormat(byteSource);
         if (!format.equals(ImageFormats.UNKNOWN)) {
-            final List<ImageParser<?>> imageParsers = ImageParser.getAllImageParsers();
+            final List<ImageParser> imageParsers = ImageParser.getAllImageParsers();
 
-            for (final ImageParser<?> imageParser : imageParsers) {
+            for (final ImageParser imageParser : imageParsers) {
                 if (imageParser.canAcceptType(format)) {
                     return imageParser;
                 }
@@ -758,9 +752,9 @@ public final class Imaging {
 
         final String fileName = byteSource.getFileName();
         if (fileName != null) {
-            final List<ImageParser<?>> imageParsers = ImageParser.getAllImageParsers();
+            final List<ImageParser> imageParsers = ImageParser.getAllImageParsers();
 
-            for (final ImageParser<?> imageParser : imageParsers) {
+            for (final ImageParser imageParser : imageParsers) {
                 if (imageParser.canAcceptExtension(fileName)) {
                     return imageParser;
                 }
@@ -867,12 +861,10 @@ public final class Imaging {
         return getImageSize(new ByteSourceFile(file), params);
     }
 
-    public static <T extends ImagingParameters> Dimension getImageSize(final ByteSource byteSource, final T params)
+    public static <T extends ImagingParameters> Dimension getImageSize(final ByteSource byteSource,
+            final ImagingParameters params)
             throws ImageReadException, IOException {
-        // TODO: better generics or redesign API
-        @SuppressWarnings("unchecked")
-        final ImageParser<T> imageParser = (ImageParser<T>) getImageParser(byteSource);
-
+        final ImageParser imageParser = getImageParser(byteSource);
         return imageParser.getImageSize(byteSource, params);
     }
 
@@ -986,7 +978,7 @@ public final class Imaging {
      */
     public static String getXmpXml(final ByteSource byteSource, final XmpImagingParameters params)
             throws ImageReadException, IOException {
-        final ImageParser<?> imageParser = getImageParser(byteSource);
+        final ImageParser imageParser = getImageParser(byteSource);
         if (imageParser instanceof XmpEmbeddable) {
             return ((XmpEmbeddable) imageParser).getXmpXml(byteSource, params);
         }
@@ -1152,10 +1144,7 @@ public final class Imaging {
 
     private static <T extends ImagingParameters> ImageMetadata getMetadata(final ByteSource byteSource, final T params)
             throws ImageReadException, IOException {
-        // TODO: better generics or redesign API
-        @SuppressWarnings("unchecked")
-        final ImageParser<T> imageParser = (ImageParser<T>) getImageParser(byteSource);
-
+        final ImageParser imageParser = getImageParser(byteSource);
         return imageParser.getMetadata(byteSource, params);
     }
 
@@ -1193,8 +1182,7 @@ public final class Imaging {
 
     private static String dumpImageFile(final ByteSource byteSource)
             throws ImageReadException, IOException {
-        final ImageParser<?> imageParser = getImageParser(byteSource);
-
+        final ImageParser imageParser = getImageParser(byteSource);
         return imageParser.dumpImageFile(byteSource);
     }
 
@@ -1230,8 +1218,7 @@ public final class Imaging {
 
     private static FormatCompliance getFormatCompliance(final ByteSource byteSource)
             throws ImageReadException, IOException {
-        final ImageParser<?> imageParser = getImageParser(byteSource);
-
+        final ImageParser imageParser = getImageParser(byteSource);
         return imageParser.getFormatCompliance(byteSource);
     }
 
@@ -1287,8 +1274,7 @@ public final class Imaging {
 
     private static List<BufferedImage> getAllBufferedImages(
             final ByteSource byteSource) throws ImageReadException, IOException {
-        final ImageParser<?> imageParser = getImageParser(byteSource);
-
+        final ImageParser imageParser = getImageParser(byteSource);
         return imageParser.getAllBufferedImages(byteSource);
     }
 
@@ -1433,15 +1419,9 @@ public final class Imaging {
         return getBufferedImage(new ByteSourceFile(file), params);
     }
 
-    @SuppressWarnings("unchecked")
     private static <T extends ImagingParameters> BufferedImage getBufferedImage(final ByteSource byteSource,
-            T params) throws ImageReadException, IOException {
-        // TODO: better generics or redesign API
-        final ImageParser<T> imageParser = (ImageParser<T>) getImageParser(byteSource);
-        if (params == null) {
-            ImageFormat format = Imaging.guessFormat(byteSource);
-            params = (T) format.createImagingParameters();
-        }
+            final ImagingParameters params) throws ImageReadException, IOException {
+        final ImageParser imageParser = getImageParser(byteSource);
         return imageParser.getBufferedImage(byteSource, params);
     }
 
@@ -1534,18 +1514,12 @@ public final class Imaging {
      * @throws IOException in the event of an unrecoverable I/O exception.
      * @see ImagingConstants
      */
-    // TODO: fix generics due to ImageParser retrieved via getAllImageParsers, and the given ImagingParameters type
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void writeImage(final BufferedImage src, final OutputStream os,
-            final ImageFormat format, ImagingParameters params) throws ImageWriteException,
+            final ImageFormat format, final ImagingParameters params) throws ImageWriteException,
             IOException {
-        final List<ImageParser<?>> imageParsers = ImageParser.getAllImageParsers();
-        if (params == null) {
-            params = format.createImagingParameters();
-        }
-
+        final List<ImageParser> imageParsers = ImageParser.getAllImageParsers();
         ImageParser imageParser = null;
-        for (final ImageParser<?> imageParser2 : imageParsers) {
+        for (final ImageParser imageParser2 : imageParsers) {
             if (imageParser2.canAcceptType(format)) {
                 imageParser = imageParser2;
                 break;
@@ -1556,5 +1530,4 @@ public final class Imaging {
         }
         imageParser.writeImage(src, os, params);
     }
-
 }
