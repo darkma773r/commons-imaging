@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
 import org.apache.commons.imaging.internal.Debug;
@@ -65,7 +66,7 @@ public class RgbeReadTest extends RgbeBaseTest {
                 RgbeReadTest.class.getResource("/IMAGING-219/timeout-9713502c9c371f1654b493650c16ab17c0444369")
                         .getFile());
         final ByteSourceFile byteSourceFile = new ByteSourceFile(inputFile);
-        final RgbeImagingParameters params = new RgbeImagingParameters();
+        final ImagingParameters params = new ImagingParameters();
         Assertions.assertThrows(ImageReadException.class, () -> new RgbeImageParser().getBufferedImage(byteSourceFile, params));
     }
 }

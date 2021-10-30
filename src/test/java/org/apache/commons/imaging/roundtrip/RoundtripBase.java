@@ -40,10 +40,10 @@ public class RoundtripBase {
                 + formatInfo.format.getDefaultExtension());
         Debug.debug("tempFile: " + temp1.getName());
 
-        final ImagingParameters params = formatInfo.format.createImagingParameters();
+        final ImagingParameters params = new ImagingParameters();
         Imaging.writeImage(testImage, temp1, formatInfo.format, params);
 
-        final ImagingParameters readParams = formatInfo.format.createImagingParameters();
+        final ImagingParameters readParams = new ImagingParameters();
         readParams.setBufferedImageFactory(new RgbBufferedImageFactory());
         final BufferedImage image2 = Imaging.getBufferedImage(temp1, readParams);
         assertNotNull(image2);

@@ -28,7 +28,6 @@ import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.ImagingTest;
 import org.apache.commons.imaging.common.XmpImagingParameters;
-import org.apache.commons.imaging.formats.gif.GifImagingParameters;
 import org.apache.commons.imaging.formats.png.PngImagingParameters;
 import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 import org.apache.commons.imaging.internal.Debug;
@@ -56,7 +55,7 @@ public class XmpUpdateTest extends ImagingTest {
             } else if (imageFormat.equals(ImageFormats.TIFF)) {
                 params = new TiffImagingParameters();
             } else if (imageFormat.equals(ImageFormats.GIF)) {
-                params = new GifImagingParameters();
+                params = new XmpImagingParameters();
             } else {
                 continue;
             }

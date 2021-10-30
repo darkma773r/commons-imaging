@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.internal.Debug;
 import org.junit.jupiter.api.Assertions;
@@ -41,7 +42,7 @@ public class WbmpReadTest extends WbmpBaseTest {
             final ImageMetadata metadata = Imaging.getMetadata(imageFile);
             Assertions.assertFalse(metadata instanceof File); // Dummy check to avoid unused warning (it may be null)
 
-            final ImageInfo imageInfo = Imaging.getImageInfo(imageFile, new WbmpImagingParameters());
+            final ImageInfo imageInfo = Imaging.getImageInfo(imageFile, new ImagingParameters());
             assertNotNull(imageInfo);
 
             final BufferedImage image = Imaging.getBufferedImage(imageFile);

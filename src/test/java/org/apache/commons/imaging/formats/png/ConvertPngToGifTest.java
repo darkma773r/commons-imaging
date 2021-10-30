@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.Imaging;
-import org.apache.commons.imaging.formats.gif.GifImagingParameters;
+import org.apache.commons.imaging.common.XmpImagingParameters;
 import org.apache.commons.imaging.internal.Debug;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +49,7 @@ public class ConvertPngToGifTest extends PngBaseTest {
 
             final File outFile = File.createTempFile(imageFile.getName() + ".", ".gif");
 
-            final GifImagingParameters gifParams = new GifImagingParameters();
+            final XmpImagingParameters gifParams = new XmpImagingParameters();
             Imaging.writeImage(image, outFile, ImageFormats.GIF, gifParams);
         }
         Debug.debug("complete.");

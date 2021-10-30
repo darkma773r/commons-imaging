@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.internal.Debug;
 import org.junit.jupiter.api.Assertions;
@@ -43,7 +44,7 @@ public class PsdReadTest extends PsdBaseTest {
             final ImageMetadata metadata = Imaging.getMetadata(imageFile);
             Assertions.assertFalse(metadata instanceof File); // Dummy check to avoid unused warning (it may be null)
 
-            final PsdImagingParameters params = new PsdImagingParameters();
+            final ImagingParameters params = new ImagingParameters();
             final ImageInfo imageInfo = Imaging.getImageInfo(imageFile, params);
             assertNotNull(imageInfo);
 
