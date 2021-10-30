@@ -41,12 +41,13 @@ import java.util.logging.Logger;
 import java.util.zip.InflaterInputStream;
 
 import org.apache.commons.imaging.ColorTools;
+import org.apache.commons.imaging.GenericImageParser;
 import org.apache.commons.imaging.ImageFormat;
 import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.ImageInfo;
-import org.apache.commons.imaging.ImageParser;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.GenericImageMetadata;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.XmpEmbeddable;
@@ -70,12 +71,16 @@ import org.apache.commons.imaging.formats.png.transparencyfilters.TransparencyFi
 import org.apache.commons.imaging.formats.png.transparencyfilters.TransparencyFilterTrueColor;
 import org.apache.commons.imaging.icc.IccProfileParser;
 
-public class PngImageParser extends ImageParser<PngImagingParameters>  implements XmpEmbeddable {
+public class PngImageParser extends GenericImageParser<PngImagingParameters>  implements XmpEmbeddable {
 
     private static final Logger LOGGER = Logger.getLogger(PngImageParser.class.getName());
 
     private static final String DEFAULT_EXTENSION = ImageFormats.PNG.getDefaultExtension();
     private static final String[] ACCEPTED_EXTENSIONS = ImageFormats.PNG.getExtensions();
+
+    public PngImageParser() {
+        super(PngImagingParameters.class);
+    }
 
     @Override
     public String getName() {
@@ -237,7 +242,7 @@ public class PngImageParser extends ImageParser<PngImagingParameters>  implement
     }
 
     @Override
-    public byte[] getICCProfileBytes(final ByteSource byteSource, final PngImagingParameters params)
+    public byte[] getICCProfileBytes(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final List<PngChunk> chunks = readChunks(byteSource, new ChunkType[] { ChunkType.iCCP },
                 true);
@@ -258,7 +263,7 @@ public class PngImageParser extends ImageParser<PngImagingParameters>  implement
     }
 
     @Override
-    public Dimension getImageSize(final ByteSource byteSource, final PngImagingParameters params)
+    public Dimension getImageSize(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final List<PngChunk> chunks = readChunks(byteSource, new ChunkType[] { ChunkType.IHDR, }, true);
 
@@ -276,7 +281,7 @@ public class PngImageParser extends ImageParser<PngImagingParameters>  implement
     }
 
     @Override
-    public ImageMetadata getMetadata(final ByteSource byteSource, final PngImagingParameters params)
+    public ImageMetadata getMetadata(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final List<PngChunk> chunks = readChunks(byteSource, new ChunkType[] { ChunkType.tEXt, ChunkType.zTXt, }, false);
 
@@ -328,7 +333,7 @@ public class PngImageParser extends ImageParser<PngImagingParameters>  implement
     }
 
     @Override
-    public ImageInfo getImageInfo(final ByteSource byteSource, final PngImagingParameters params)
+    public ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final List<PngChunk> chunks = readChunks(byteSource, new ChunkType[] {
                 ChunkType.IHDR,
@@ -482,7 +487,7 @@ public class PngImageParser extends ImageParser<PngImagingParameters>  implement
     }
 
     @Override
-    public BufferedImage getBufferedImage(final ByteSource byteSource, PngImagingParameters params)
+    public BufferedImage getBufferedImage(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
 
         final List<PngChunk> chunks = readChunks(byteSource, new ChunkType[] {
@@ -699,9 +704,10 @@ public class PngImageParser extends ImageParser<PngImagingParameters>  implement
     }
 
     @Override
-    public void writeImage(final BufferedImage src, final OutputStream os, final PngImagingParameters params)
+    public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
-        new PngWriter().writeImage(src, os, params);
+        final PngImagingParameters pngParams = getParameters(params);
+        new PngWriter().writeImage(src, os, pngParams);
     }
 
     @Override
@@ -735,4 +741,13 @@ public class PngImageParser extends ImageParser<PngImagingParameters>  implement
         return chunk.getText();
     }
 
+    @Override
+    protected PngImagingParameters createDefaultParameters() {
+        return new PngImagingParameters();
+    }
+
+    @Override
+    protected PngImagingParameters createParameters(final ImagingParameters params) {
+        return new PngImagingParameters(params);
+    }
 }

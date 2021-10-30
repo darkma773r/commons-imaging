@@ -93,13 +93,13 @@ public class PcxImageParser extends GenericImageParser<PcxImagingParameters> {
     }
 
     @Override
-    protected ImageMetadata getMetadataInternal(final ByteSource byteSource, final PcxImagingParameters params)
+    public ImageMetadata getMetadata(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     @Override
-    protected ImageInfo getImageInfoInternal(final ByteSource byteSource, final PcxImagingParameters params)
+    public ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final PcxHeader pcxHeader = readPcxHeader(byteSource);
         final Dimension size = getImageSize(byteSource, params);
@@ -126,7 +126,7 @@ public class PcxImageParser extends GenericImageParser<PcxImagingParameters> {
     }
 
     @Override
-    protected Dimension getImageSizeInternal(final ByteSource byteSource, final PcxImagingParameters params)
+    public Dimension getImageSize(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final PcxHeader pcxHeader = readPcxHeader(byteSource);
         final int xSize = pcxHeader.xMax - pcxHeader.xMin + 1;
@@ -141,7 +141,7 @@ public class PcxImageParser extends GenericImageParser<PcxImagingParameters> {
     }
 
     @Override
-    protected byte[] getICCProfileBytesInternal(final ByteSource byteSource, final PcxImagingParameters params)
+    public byte[] getICCProfileBytes(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
@@ -472,8 +472,8 @@ public class PcxImageParser extends GenericImageParser<PcxImagingParameters> {
     }
 
     @Override
-    protected BufferedImage getBufferedImageInternal(final ByteSource byteSource,
-            PcxImagingParameters params) throws ImageReadException, IOException {
+    public BufferedImage getBufferedImage(final ByteSource byteSource,
+            ImagingParameters params) throws ImageReadException, IOException {
         try (InputStream is = byteSource.getInputStream()) {
             final PcxHeader pcxHeader = readPcxHeader(is, params.isStrict());
             return readImage(pcxHeader, is, byteSource);
@@ -481,9 +481,10 @@ public class PcxImageParser extends GenericImageParser<PcxImagingParameters> {
     }
 
     @Override
-    protected void writeImageInternal(final BufferedImage src, final OutputStream os, final PcxImagingParameters params)
+    public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
-        new PcxWriter(params).writeImage(src, os);
+        PcxImagingParameters pcxParams = getParameters(params);
+        new PcxWriter(pcxParams).writeImage(src, os);
     }
 
     @Override

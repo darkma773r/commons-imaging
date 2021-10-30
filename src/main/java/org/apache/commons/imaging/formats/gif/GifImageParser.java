@@ -475,13 +475,13 @@ public class GifImageParser extends GenericImageParser<XmpImagingParameters> imp
     }
 
     @Override
-    protected byte[] getICCProfileBytesInternal(final ByteSource byteSource, final XmpImagingParameters params)
+    public byte[] getICCProfileBytes(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     @Override
-    protected Dimension getImageSizeInternal(final ByteSource byteSource, final XmpImagingParameters params)
+    public Dimension getImageSize(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final GifImageContents blocks = readFile(byteSource, false);
 
@@ -523,7 +523,7 @@ public class GifImageParser extends GenericImageParser<XmpImagingParameters> imp
     }
 
     @Override
-    protected ImageMetadata getMetadataInternal(final ByteSource byteSource, final XmpImagingParameters params)
+    public ImageMetadata getMetadata(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final GifImageContents imageContents = readFile(byteSource, false);
 
@@ -556,7 +556,7 @@ public class GifImageParser extends GenericImageParser<XmpImagingParameters> imp
     }
 
     @Override
-    protected ImageInfo getImageInfoInternal(final ByteSource byteSource, final XmpImagingParameters params)
+    public ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final GifImageContents blocks = readFile(byteSource, false);
 
@@ -814,7 +814,7 @@ public class GifImageParser extends GenericImageParser<XmpImagingParameters> imp
     }
 
     @Override
-    protected BufferedImage getBufferedImageInternal(final ByteSource byteSource, final XmpImagingParameters params)
+    public BufferedImage getBufferedImage(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final GifImageContents imageContents = readFile(byteSource, false);
 
@@ -841,10 +841,12 @@ public class GifImageParser extends GenericImageParser<XmpImagingParameters> imp
     }
 
     @Override
-    protected void writeImageInternal(final BufferedImage src, final OutputStream os, XmpImagingParameters params)
+    public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
 
-        String xmpXml = params.getXmpXml();
+        final XmpImagingParameters xmpParams = getParameters(params);
+
+        String xmpXml = xmpParams.getXmpXml();
 
         final int width = src.getWidth();
         final int height = src.getHeight();

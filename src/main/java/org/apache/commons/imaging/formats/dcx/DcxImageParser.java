@@ -28,10 +28,10 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.imaging.GenericImageParser;
 import org.apache.commons.imaging.ImageFormat;
 import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.ImageInfo;
+import org.apache.commons.imaging.ImageParser;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.ImagingParameters;
@@ -42,13 +42,12 @@ import org.apache.commons.imaging.common.bytesource.ByteSourceInputStream;
 import org.apache.commons.imaging.formats.pcx.PcxImageParser;
 import org.apache.commons.imaging.formats.pcx.PcxImagingParameters;
 
-public class DcxImageParser extends GenericImageParser<PcxImagingParameters> {
+public class DcxImageParser extends ImageParser {
     // See http://www.fileformat.fine/format/pcx/egff.htm for documentation
     private static final String DEFAULT_EXTENSION = ImageFormats.DCX.getDefaultExtension();
     private static final String[] ACCEPTED_EXTENSIONS = ImageFormats.DCX.getExtensions();
 
     public DcxImageParser() {
-        super(PcxImagingParameters.class);
         super.setByteOrder(ByteOrder.LITTLE_ENDIAN);
     }
 
@@ -74,28 +73,28 @@ public class DcxImageParser extends GenericImageParser<PcxImagingParameters> {
 
     // FIXME should throw UOE
     @Override
-    protected ImageMetadata getMetadataInternal(final ByteSource byteSource, final PcxImagingParameters params)
+    public ImageMetadata getMetadata(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     // FIXME should throw UOE
     @Override
-    protected ImageInfo getImageInfoInternal(final ByteSource byteSource, final PcxImagingParameters params)
+    public ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     // FIXME should throw UOE
     @Override
-    protected Dimension getImageSizeInternal(final ByteSource byteSource, final PcxImagingParameters params)
+    public Dimension getImageSize(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     // FIXME should throw UOE
     @Override
-    protected byte[] getICCProfileBytesInternal(final ByteSource byteSource, final PcxImagingParameters params)
+    public byte[] getICCProfileBytes(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
@@ -160,8 +159,8 @@ public class DcxImageParser extends GenericImageParser<PcxImagingParameters> {
     }
 
     @Override
-    protected final BufferedImage getBufferedImageInternal(final ByteSource byteSource,
-            final PcxImagingParameters params) throws ImageReadException, IOException {
+    public final BufferedImage getBufferedImage(final ByteSource byteSource,
+            final ImagingParameters params) throws ImageReadException, IOException {
         final List<BufferedImage> list = getAllBufferedImages(byteSource);
         if (list.isEmpty()) {
             return null;
@@ -188,7 +187,7 @@ public class DcxImageParser extends GenericImageParser<PcxImagingParameters> {
     }
 
     @Override
-    protected void writeImageInternal(final BufferedImage src, final OutputStream os, final PcxImagingParameters params)
+    public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
         final int headerSize = 4 + 1024 * 4;
 
@@ -202,15 +201,5 @@ public class DcxImageParser extends GenericImageParser<PcxImagingParameters> {
         }
         final PcxImageParser pcxImageParser = new PcxImageParser();
         pcxImageParser.writeImage(src, bos, params);
-    }
-
-    @Override
-    protected PcxImagingParameters createDefaultParameters() {
-        return new PcxImagingParameters();
-    }
-
-    @Override
-    protected PcxImagingParameters createParameters(ImagingParameters params) {
-        return new PcxImagingParameters(params);
     }
 }

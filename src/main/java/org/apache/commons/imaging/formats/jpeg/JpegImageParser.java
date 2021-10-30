@@ -33,11 +33,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.imaging.GenericImageParser;
 import org.apache.commons.imaging.ImageFormat;
 import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.ImageInfo;
-import org.apache.commons.imaging.ImageParser;
 import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.XmpEmbeddable;
 import org.apache.commons.imaging.common.XmpImagingParameters;
@@ -59,10 +60,11 @@ import org.apache.commons.imaging.formats.jpeg.xmp.JpegXmpParser;
 import org.apache.commons.imaging.formats.tiff.TiffField;
 import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
 import org.apache.commons.imaging.formats.tiff.TiffImageParser;
+import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
 import org.apache.commons.imaging.internal.Debug;
 
-public class JpegImageParser extends ImageParser<JpegImagingParameters> implements XmpEmbeddable {
+public class JpegImageParser extends GenericImageParser<TiffImagingParameters> implements XmpEmbeddable {
 
     private static final Logger LOGGER = Logger.getLogger(JpegImageParser.class.getName());
 
@@ -70,6 +72,7 @@ public class JpegImageParser extends ImageParser<JpegImagingParameters> implemen
     private static final String[] ACCEPTED_EXTENSIONS = ImageFormats.JPEG.getExtensions();
 
     public JpegImageParser() {
+        super(TiffImagingParameters.class);
         setByteOrder(ByteOrder.BIG_ENDIAN);
     }
 
@@ -97,7 +100,7 @@ public class JpegImageParser extends ImageParser<JpegImagingParameters> implemen
 
     @Override
     public final BufferedImage getBufferedImage(final ByteSource byteSource,
-            final JpegImagingParameters params) throws ImageReadException, IOException {
+            final ImagingParameters params) throws ImageReadException, IOException {
         final JpegDecoder jpegDecoder = new JpegDecoder();
         return jpegDecoder.decode(byteSource);
     }
@@ -288,7 +291,7 @@ public class JpegImageParser extends ImageParser<JpegImagingParameters> implemen
     }
 
     @Override
-    public byte[] getICCProfileBytes(final ByteSource byteSource, final JpegImagingParameters params)
+    public byte[] getICCProfileBytes(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final List<Segment> segments = readSegments(byteSource,
                 new int[] { JpegConstants.JPEG_APP2_MARKER, }, false);
@@ -318,15 +321,14 @@ public class JpegImageParser extends ImageParser<JpegImagingParameters> implemen
     }
 
     @Override
-    public ImageMetadata getMetadata(final ByteSource byteSource, JpegImagingParameters params)
+    public ImageMetadata getMetadata(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
-        if (params == null) {
-            params = new JpegImagingParameters();
-        }
-        final TiffImageMetadata exif = getExifMetadata(byteSource, params);
+        final TiffImagingParameters tiffParams = getParameters(params);
+
+        final TiffImageMetadata exif = getExifMetadata(byteSource, tiffParams);
 
         final JpegPhotoshopMetadata photoshop = getPhotoshopMetadata(byteSource,
-                params);
+                tiffParams);
 
         if (null == exif && null == photoshop) {
             return null;
@@ -352,7 +354,7 @@ public class JpegImageParser extends ImageParser<JpegImagingParameters> implemen
         return result;
     }
 
-    public TiffImageMetadata getExifMetadata(final ByteSource byteSource, JpegImagingParameters params)
+    public TiffImageMetadata getExifMetadata(final ByteSource byteSource, TiffImagingParameters params)
             throws ImageReadException, IOException {
         final byte[] bytes = getExifRawData(byteSource);
         if (null == bytes) {
@@ -360,7 +362,7 @@ public class JpegImageParser extends ImageParser<JpegImagingParameters> implemen
         }
 
         if (params == null) {
-            params = new JpegImagingParameters();
+            params = new TiffImagingParameters();
         }
         params.setReadThumbnails(Boolean.TRUE);
 
@@ -591,7 +593,7 @@ public class JpegImageParser extends ImageParser<JpegImagingParameters> implemen
     }
 
     public JpegPhotoshopMetadata getPhotoshopMetadata(final ByteSource byteSource,
-            final JpegImagingParameters params) throws ImageReadException, IOException {
+            final TiffImagingParameters params) throws ImageReadException, IOException {
         final List<Segment> segments = readSegments(byteSource,
                 new int[] { JpegConstants.JPEG_APP13_MARKER, }, false);
 
@@ -620,7 +622,7 @@ public class JpegImageParser extends ImageParser<JpegImagingParameters> implemen
     }
 
     @Override
-    public Dimension getImageSize(final ByteSource byteSource, final JpegImagingParameters params)
+    public Dimension getImageSize(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final List<Segment> segments = readSegments(byteSource, new int[] {
                 // kJFIFMarker,
@@ -654,7 +656,7 @@ public class JpegImageParser extends ImageParser<JpegImagingParameters> implemen
     }
 
     @Override
-    public ImageInfo getImageInfo(final ByteSource byteSource, final JpegImagingParameters params)
+    public ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         // List allSegments = readSegments(byteSource, null, false);
 
@@ -1014,4 +1016,13 @@ public class JpegImageParser extends ImageParser<JpegImagingParameters> implemen
         return true;
     }
 
+    @Override
+    protected TiffImagingParameters createDefaultParameters() {
+        return new TiffImagingParameters();
+    }
+
+    @Override
+    protected TiffImagingParameters createParameters(final ImagingParameters params) {
+        return new TiffImagingParameters(params);
+    }
 }

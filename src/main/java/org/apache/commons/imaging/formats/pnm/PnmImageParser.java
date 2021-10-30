@@ -29,18 +29,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.commons.imaging.GenericImageParser;
 import org.apache.commons.imaging.ImageFormat;
 import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.ImageInfo;
-import org.apache.commons.imaging.ImageParser;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.ImageBuilder;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.bytesource.ByteSource;
 import org.apache.commons.imaging.palette.PaletteFactory;
 
-public class PnmImageParser extends ImageParser<PnmImagingParameters> {
+public class PnmImageParser extends GenericImageParser<PnmImagingParameters> {
     private static final String DEFAULT_EXTENSION = ImageFormats.PNM.getDefaultExtension();
     private static final String[] ACCEPTED_EXTENSIONS = {
             ImageFormats.PAM.getDefaultExtension(),
@@ -51,6 +52,7 @@ public class PnmImageParser extends ImageParser<PnmImagingParameters> {
     };
 
     public PnmImageParser() {
+        super(PnmImagingParameters.class);
         super.setByteOrder(ByteOrder.LITTLE_ENDIAN);
         // setDebug(true);
     }
@@ -222,13 +224,13 @@ public class PnmImageParser extends ImageParser<PnmImagingParameters> {
     }
 
     @Override
-    public byte[] getICCProfileBytes(final ByteSource byteSource, final PnmImagingParameters params)
+    public byte[] getICCProfileBytes(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     @Override
-    public Dimension getImageSize(final ByteSource byteSource, final PnmImagingParameters params)
+    public Dimension getImageSize(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final FileInfo info = readHeader(byteSource);
 
@@ -236,13 +238,13 @@ public class PnmImageParser extends ImageParser<PnmImagingParameters> {
     }
 
     @Override
-    public ImageMetadata getMetadata(final ByteSource byteSource, final PnmImagingParameters params)
+    public ImageMetadata getMetadata(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
 
     @Override
-    public ImageInfo getImageInfo(final ByteSource byteSource, final PnmImagingParameters params)
+    public ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final FileInfo info = readHeader(byteSource);
 
@@ -295,7 +297,7 @@ public class PnmImageParser extends ImageParser<PnmImagingParameters> {
     }
 
     @Override
-    public BufferedImage getBufferedImage(final ByteSource byteSource, final PnmImagingParameters params)
+    public BufferedImage getBufferedImage(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         try (InputStream is = byteSource.getInputStream()) {
             final FileInfo info = readHeader(is);
@@ -313,25 +315,23 @@ public class PnmImageParser extends ImageParser<PnmImagingParameters> {
     }
 
     @Override
-    public void writeImage(final BufferedImage src, final OutputStream os, PnmImagingParameters params)
+    public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
+        final PnmImagingParameters pnmParams = getParameters(params);
+
         PnmWriter writer = null;
-        boolean useRawbits = true;
+        boolean useRawbits = pnmParams.isRawBits();
 
-        if (params != null) {
-            useRawbits = params.isRawBits();
-
-            final ImageFormats subtype = params.getSubtype();
-            if (subtype != null) {
-                if (subtype.equals(ImageFormats.PBM)) {
-                    writer = new PbmWriter(useRawbits);
-                } else if (subtype.equals(ImageFormats.PGM)) {
-                    writer = new PgmWriter(useRawbits);
-                } else if (subtype.equals(ImageFormats.PPM)) {
-                    writer = new PpmWriter(useRawbits);
-                } else if (subtype.equals(ImageFormats.PAM)) {
-                    writer = new PamWriter();
-                }
+        final ImageFormats subtype = pnmParams.getSubtype();
+        if (subtype != null) {
+            if (subtype.equals(ImageFormats.PBM)) {
+                writer = new PbmWriter(useRawbits);
+            } else if (subtype.equals(ImageFormats.PGM)) {
+                writer = new PgmWriter(useRawbits);
+            } else if (subtype.equals(ImageFormats.PPM)) {
+                writer = new PpmWriter(useRawbits);
+            } else if (subtype.equals(ImageFormats.PAM)) {
+                writer = new PamWriter();
             }
         }
 
@@ -344,6 +344,16 @@ public class PnmImageParser extends ImageParser<PnmImagingParameters> {
             }
         }
 
-        writer.writeImage(src, os, params);
+        writer.writeImage(src, os, pnmParams);
+    }
+
+    @Override
+    protected PnmImagingParameters createDefaultParameters() {
+        return new PnmImagingParameters();
+    }
+
+    @Override
+    protected PnmImagingParameters createParameters(final ImagingParameters params) {
+        return new PnmImagingParameters(params);
     }
 }

@@ -31,6 +31,19 @@ public class PnmImagingParameters extends ImagingParameters {
      */
     private ImageFormats subtype = null;
 
+    public PnmImagingParameters() {}
+
+    public PnmImagingParameters(final ImagingParameters params) {
+        super(params);
+
+        if (params instanceof PnmImagingParameters) {
+            PnmImagingParameters pnmParams = (PnmImagingParameters) params;
+
+            this.rawBits = pnmParams.rawBits;
+            this.subtype = pnmParams.subtype;
+        }
+    }
+
     public boolean isRawBits() {
         return rawBits;
     }

@@ -15,6 +15,7 @@
 
 package org.apache.commons.imaging.formats.tiff;
 
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.XmpImagingParameters;
 import org.apache.commons.imaging.formats.tiff.photometricinterpreters.PhotometricInterpreter;
 import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet;
@@ -97,6 +98,28 @@ public class TiffImagingParameters extends XmpImagingParameters {
      * TIFF_FLAG_T6_OPTIONS_UNCOMPRESSED_MODE.</p>
      */
     private Integer t6Options = null;
+
+    public TiffImagingParameters() {}
+
+    public TiffImagingParameters(final ImagingParameters params) {
+        super(params);
+
+        if (params instanceof TiffImagingParameters) {
+            TiffImagingParameters otherTiff = (TiffImagingParameters) params;
+
+            this.readThumbnails = otherTiff.readThumbnails;
+            this.exif = otherTiff.exif;
+            this.subImageX = otherTiff.subImageX;
+            this.subImageY = otherTiff.subImageY;
+            this.subImageWidth = otherTiff.subImageWidth;
+            this.subImageHeight = otherTiff.subImageHeight;
+            this.customPhotometricInterpreter = otherTiff.customPhotometricInterpreter;
+            this.compression = otherTiff.compression;
+            this.lzwCompressionBlockSize = otherTiff.lzwCompressionBlockSize;
+            this.t4Options = otherTiff.t4Options;
+            this.t6Options = otherTiff.t6Options;
+        }
+    }
 
     public boolean isReadThumbnails() {
         return readThumbnails;

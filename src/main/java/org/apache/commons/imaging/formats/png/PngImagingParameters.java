@@ -18,6 +18,7 @@ package org.apache.commons.imaging.formats.png;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.XmpImagingParameters;
 
 /**
@@ -52,6 +53,22 @@ public class PngImagingParameters extends XmpImagingParameters {
      * <p>Valid values: a list of WriteTexts.</p>
      */
     private List<? extends PngText> textChunks = null;
+
+    public PngImagingParameters() {}
+
+    public PngImagingParameters(final ImagingParameters other) {
+        super(other);
+
+        if (other instanceof PngImagingParameters) {
+            PngImagingParameters pngOther = (PngImagingParameters) other;
+
+            this.bitDepth = pngOther.bitDepth;
+            this.forceIndexedColor = pngOther.forceIndexedColor;
+            this.forceTrueColor = pngOther.forceTrueColor;
+            this.physicalScale = pngOther.physicalScale;
+            this.textChunks = pngOther.textChunks;
+        }
+    }
 
     public byte getBitDepth() {
         return bitDepth;
