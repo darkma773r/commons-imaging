@@ -39,7 +39,6 @@ import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.ImagingParameters;
-import org.apache.commons.imaging.formats.jpeg.JpegImagingParameters;
 import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 import org.apache.commons.imaging.internal.Debug;
 import org.apache.commons.io.FileUtils;
@@ -163,12 +162,16 @@ public class ByteSourceImageTest extends ByteSourceTest {
             IllegalArgumentException, InvocationTargetException {
         final boolean ignoreImageData = isPhilHarveyTestImage(imageFile);
         final ImageFormat imageFormat = Imaging.guessFormat(imageFile);
-        final ImagingParameters params = imageFormat.createImagingParameters();
-        if (imageFormat == ImageFormats.TIFF) {
-            ((TiffImagingParameters) params).setReadThumbnails(Boolean.valueOf(!ignoreImageData));
-        }
-        if (imageFormat == ImageFormats.JPEG) {
-            ((JpegImagingParameters) params).setReadThumbnails(Boolean.valueOf(!ignoreImageData));
+
+        final ImagingParameters params;
+        if (imageFormat == ImageFormats.TIFF ||
+                imageFormat == ImageFormats.JPEG) {
+            TiffImagingParameters tiffParams = new TiffImagingParameters();
+            tiffParams.setReadThumbnails(Boolean.valueOf(!ignoreImageData));
+
+            params = tiffParams;
+        } else {
+            params = new ImagingParameters();
         }
 
         final ImageInfo imageInfoFile = Imaging.getImageInfo(imageFile, params);

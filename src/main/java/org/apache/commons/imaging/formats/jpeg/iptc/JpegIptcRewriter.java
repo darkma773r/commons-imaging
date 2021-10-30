@@ -32,8 +32,8 @@ import org.apache.commons.imaging.common.bytesource.ByteSourceArray;
 import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
 import org.apache.commons.imaging.common.bytesource.ByteSourceInputStream;
 import org.apache.commons.imaging.formats.jpeg.JpegConstants;
-import org.apache.commons.imaging.formats.jpeg.JpegImagingParameters;
 import org.apache.commons.imaging.formats.jpeg.xmp.JpegRewriter;
+import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 
 /**
  * Interface for Exif write/update/remove functionality for Jpeg/JFIF images.
@@ -233,7 +233,7 @@ public class JpegIptcRewriter extends JpegRewriter {
         final List<JFIFPiece> newPieces = removePhotoshopApp13Segments(oldPieces);
         if (!removeSegment && photoshopApp13Segments.size() == 1) {
             final JFIFPieceSegment oldSegment = (JFIFPieceSegment) photoshopApp13Segments.get(0);
-            final JpegImagingParameters params = new JpegImagingParameters();
+            final TiffImagingParameters params = new TiffImagingParameters();
             final PhotoshopApp13Data oldData = new IptcParser().parsePhotoshopSegment(oldSegment.getSegmentData(), params);
             final List<IptcBlock> newBlocks = oldData.getNonIptcBlocks();
             final List<IptcRecord> newRecords = new ArrayList<>();

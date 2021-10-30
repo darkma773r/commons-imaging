@@ -31,6 +31,7 @@ import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
+import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 import org.apache.commons.imaging.internal.Debug;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -45,7 +46,7 @@ public class JpegReadTest extends JpegBaseTest {
     @ParameterizedTest
     @MethodSource("data")
     public void test(final File imageFile) throws Exception {
-        final JpegImagingParameters params = new JpegImagingParameters();
+        final TiffImagingParameters params = new TiffImagingParameters();
         final boolean ignoreImageData = isPhilHarveyTestImage(imageFile);
         params.setReadThumbnails(!ignoreImageData);
 
@@ -84,7 +85,7 @@ public class JpegReadTest extends JpegBaseTest {
         final String input = "/images/jpeg/oss-fuzz-33458/clusterfuzz-testcase-minimized-ImagingJpegFuzzer-4548690447564800";
         final String file = JpegReadTest.class.getResource(input).getFile();
         final JpegImageParser parser = new JpegImageParser();
-        assertThrows(ImageReadException.class, () -> parser.getBufferedImage(new ByteSourceFile(new File(file)), new JpegImagingParameters()));
+        assertThrows(ImageReadException.class, () -> parser.getBufferedImage(new ByteSourceFile(new File(file)), new TiffImagingParameters()));
     }
 
 }

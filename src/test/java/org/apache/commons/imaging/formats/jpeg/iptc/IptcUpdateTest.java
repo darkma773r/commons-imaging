@@ -35,8 +35,8 @@ import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.common.bytesource.ByteSource;
 import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
 import org.apache.commons.imaging.formats.jpeg.JpegImageParser;
-import org.apache.commons.imaging.formats.jpeg.JpegImagingParameters;
 import org.apache.commons.imaging.formats.jpeg.JpegPhotoshopMetadata;
+import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -54,7 +54,7 @@ public class IptcUpdateTest extends IptcBaseTest {
     public void testRemove(final File imageFile) throws Exception {
         final ByteSource byteSource = new ByteSourceFile(imageFile);
 
-        final JpegImagingParameters params = new JpegImagingParameters();
+        final TiffImagingParameters params = new TiffImagingParameters();
         final boolean ignoreImageData = isPhilHarveyTestImage(imageFile);
         params.setReadThumbnails(!ignoreImageData);
 
@@ -86,7 +86,7 @@ public class IptcUpdateTest extends IptcBaseTest {
     public void testInsert(final File imageFile) throws Exception {
         final ByteSource byteSource = new ByteSourceFile(imageFile);
 
-        final JpegImagingParameters params = new JpegImagingParameters();
+        final TiffImagingParameters params = new TiffImagingParameters();
         final boolean ignoreImageData = isPhilHarveyTestImage(imageFile);
         params.setReadThumbnails(!ignoreImageData);
 
@@ -127,7 +127,7 @@ public class IptcUpdateTest extends IptcBaseTest {
     public void testUpdate(final File imageFile) throws Exception {
         final ByteSource byteSource = new ByteSourceFile(imageFile);
 
-        final JpegImagingParameters params = new JpegImagingParameters();
+        final TiffImagingParameters params = new TiffImagingParameters();
         final boolean ignoreImageData = isPhilHarveyTestImage(imageFile);
         params.setReadThumbnails(!ignoreImageData);
 
@@ -169,7 +169,7 @@ public class IptcUpdateTest extends IptcBaseTest {
     public void testNoChangeUpdate(final File imageFile) throws Exception {
         final ByteSource byteSource = new ByteSourceFile(imageFile);
 
-        final JpegImagingParameters params = new JpegImagingParameters();
+        final TiffImagingParameters params = new TiffImagingParameters();
         final boolean ignoreImageData = isPhilHarveyTestImage(imageFile);
         params.setReadThumbnails(!ignoreImageData);
 

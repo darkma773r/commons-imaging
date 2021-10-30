@@ -39,6 +39,7 @@ import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageParser;
 import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImagingParameters;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.XmpEmbeddable;
 import org.apache.commons.imaging.common.XmpImagingParameters;
@@ -54,7 +55,7 @@ import org.apache.commons.imaging.formats.psd.datareaders.CompressedDataReader;
 import org.apache.commons.imaging.formats.psd.datareaders.DataReader;
 import org.apache.commons.imaging.formats.psd.datareaders.UncompressedDataReader;
 
-public class PsdImageParser extends ImageParser<PsdImagingParameters> implements XmpEmbeddable {
+public class PsdImageParser extends ImageParser implements XmpEmbeddable {
     private static final String DEFAULT_EXTENSION = ImageFormats.PSD.getDefaultExtension();
     private static final String[] ACCEPTED_EXTENSIONS = ImageFormats.PSD.getExtensions();
     private static final int PSD_SECTION_HEADER = 0;
@@ -381,7 +382,7 @@ public class PsdImageParser extends ImageParser<PsdImagingParameters> implements
     }
 
     @Override
-    public byte[] getICCProfileBytes(final ByteSource byteSource, final PsdImagingParameters params)
+    public byte[] getICCProfileBytes(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final List<ImageResourceBlock> blocks = readImageResourceBlocks(byteSource,
                 new int[] { IMAGE_RESOURCE_ID_ICC_PROFILE, }, 1);
@@ -399,7 +400,7 @@ public class PsdImageParser extends ImageParser<PsdImagingParameters> implements
     }
 
     @Override
-    public Dimension getImageSize(final ByteSource byteSource, final PsdImagingParameters params)
+    public Dimension getImageSize(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final PsdHeaderInfo bhi = readHeader(byteSource);
 
@@ -408,7 +409,7 @@ public class PsdImageParser extends ImageParser<PsdImagingParameters> implements
     }
 
     @Override
-    public ImageMetadata getMetadata(final ByteSource byteSource, final PsdImagingParameters params)
+    public ImageMetadata getMetadata(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         return null;
     }
@@ -438,7 +439,7 @@ public class PsdImageParser extends ImageParser<PsdImagingParameters> implements
     }
 
     @Override
-    public ImageInfo getImageInfo(final ByteSource byteSource, final PsdImagingParameters params)
+    public ImageInfo getImageInfo(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final PsdImageContents imageContents = readImageContents(byteSource);
         // ImageContents imageContents = readImage(byteSource, false);
@@ -545,7 +546,7 @@ public class PsdImageParser extends ImageParser<PsdImagingParameters> implements
     }
 
     @Override
-    public BufferedImage getBufferedImage(final ByteSource byteSource, final PsdImagingParameters params)
+    public BufferedImage getBufferedImage(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
         final PsdImageContents imageContents = readImageContents(byteSource);
         // ImageContents imageContents = readImage(byteSource, false);

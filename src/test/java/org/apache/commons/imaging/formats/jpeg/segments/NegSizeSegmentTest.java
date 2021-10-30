@@ -27,8 +27,8 @@ import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.common.bytesource.ByteSource;
 import org.apache.commons.imaging.common.bytesource.ByteSourceInputStream;
 import org.apache.commons.imaging.formats.jpeg.JpegImageParser;
-import org.apache.commons.imaging.formats.jpeg.JpegImagingParameters;
 import org.apache.commons.imaging.formats.jpeg.JpegUtils;
+import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 import org.junit.jupiter.api.Test;
 
 public class NegSizeSegmentTest {
@@ -49,7 +49,7 @@ public class NegSizeSegmentTest {
             final InputStream inputStream = new ByteArrayInputStream(bytes);
             final ByteSource bs = new ByteSourceInputStream(inputStream, "NegSizeSegment");
             final JpegImageParser p = new JpegImageParser();
-            p.getBufferedImage(bs, new JpegImagingParameters());
+            p.getBufferedImage(bs, new TiffImagingParameters());
             fail("Expecting exception: ImageReadException");
         } catch (final ImageReadException e) {
             assertEquals("Invalid segment size", e.getMessage());

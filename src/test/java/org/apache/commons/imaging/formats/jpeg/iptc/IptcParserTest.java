@@ -31,8 +31,8 @@ import org.apache.commons.imaging.common.GenericImageMetadata.GenericImageMetada
 import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 import org.apache.commons.imaging.formats.jpeg.JpegImageParser;
-import org.apache.commons.imaging.formats.jpeg.JpegImagingParameters;
 import org.apache.commons.imaging.formats.jpeg.JpegPhotoshopMetadata;
+import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -65,7 +65,7 @@ public class IptcParserTest {
                 .getFile();
         final File imageFile = new File(location);
         final JpegImageMetadata metadata = (JpegImageMetadata) new JpegImageParser()
-                .getMetadata(new ByteSourceFile(imageFile), new JpegImagingParameters());
+                .getMetadata(new ByteSourceFile(imageFile), new TiffImagingParameters());
         final JpegPhotoshopMetadata photoshopMetadata = metadata.getPhotoshop();
         final PhotoshopApp13Data photoshopApp13Data = photoshopMetadata.photoshopApp13Data;
         final List<IptcBlock> blocks = photoshopApp13Data.getRawBlocks();
@@ -101,7 +101,7 @@ public class IptcParserTest {
         List<GenericImageMetadataItem> items = (List<GenericImageMetadataItem>) photoshopMetadata.getItems();
         GenericImageMetadataItem thanksInMandarin = items.get(3);
         // converted the thank-you in chinese characters to unicode for comparison here
-        assertArrayEquals("\u8c22\u8c22".getBytes(StandardCharsets.UTF_8), 
+        assertArrayEquals("\u8c22\u8c22".getBytes(StandardCharsets.UTF_8),
               thanksInMandarin.getText().getBytes(StandardCharsets.UTF_8));
     }
 }

@@ -25,6 +25,7 @@ import java.io.File;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.ImagingTest;
 import org.apache.commons.imaging.common.ImageMetadata;
+import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 import org.junit.jupiter.api.Test;
 
 public class JpegWithJpegThumbnailTest extends ImagingTest {
@@ -33,7 +34,7 @@ public class JpegWithJpegThumbnailTest extends ImagingTest {
     public void testSingleImage() throws Exception {
         final File imageFile = getTestImageByName("img_F028c_small.jpg");
 
-        final JpegImagingParameters params = new JpegImagingParameters();
+        final TiffImagingParameters params = new TiffImagingParameters();
         final ImageMetadata metadata = Imaging.getMetadata(imageFile, params);
         assertNotNull(metadata);
         final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;

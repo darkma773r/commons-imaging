@@ -26,8 +26,8 @@ import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.common.bytesource.ByteSource;
 import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
-import org.apache.commons.imaging.formats.jpeg.JpegImagingParameters;
 import org.apache.commons.imaging.formats.jpeg.JpegUtils;
+import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 import org.apache.commons.imaging.internal.Debug;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -50,7 +50,7 @@ public class ExifDumpTest extends ExifBaseTest {
     @ParameterizedTest
     @MethodSource("data")
     public void testMetadata(final File imageFile) throws Exception {
-        final JpegImagingParameters params = new JpegImagingParameters();
+        final TiffImagingParameters params = new TiffImagingParameters();
         final boolean ignoreImageData = isPhilHarveyTestImage(imageFile);
         params.setReadThumbnails(!ignoreImageData);
 

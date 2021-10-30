@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.common.XmpImagingParameters;
 import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -160,7 +161,7 @@ public class GifReadTest extends GifBaseTest {
         final String input = "/images/gif/oss-fuzz-33501/clusterfuzz-testcase-minimized-ImagingGifFuzzer-5914278319226880";
         final String file = GifReadTest.class.getResource(input).getFile();
         final GifImageParser parser = new GifImageParser();
-        assertThrows(ImageReadException.class, () -> parser.getBufferedImage(new ByteSourceFile(new File(file)), new GifImagingParameters()));
+        assertThrows(ImageReadException.class, () -> parser.getBufferedImage(new ByteSourceFile(new File(file)), new XmpImagingParameters()));
     }
 
     /**
@@ -179,6 +180,6 @@ public class GifReadTest extends GifBaseTest {
         final String input = "/images/gif/oss-fuzz-33464/clusterfuzz-testcase-minimized-ImagingGifFuzzer-5174009164595200";
         final String file = GifReadTest.class.getResource(input).getFile();
         final GifImageParser parser = new GifImageParser();
-        assertThrows(ImageReadException.class, () -> parser.getBufferedImage(new ByteSourceFile(new File(file)), new GifImagingParameters()));
+        assertThrows(ImageReadException.class, () -> parser.getBufferedImage(new ByteSourceFile(new File(file)), new XmpImagingParameters()));
     }
 }

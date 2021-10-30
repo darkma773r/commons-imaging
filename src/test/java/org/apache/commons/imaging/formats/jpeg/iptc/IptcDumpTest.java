@@ -25,8 +25,8 @@ import java.util.stream.Stream;
 
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
-import org.apache.commons.imaging.formats.jpeg.JpegImagingParameters;
 import org.apache.commons.imaging.formats.jpeg.JpegPhotoshopMetadata;
+import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
 import org.apache.commons.imaging.internal.Debug;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -40,7 +40,7 @@ public class IptcDumpTest extends IptcBaseTest {
     @ParameterizedTest
     @MethodSource("data")
     public void test(final File imageFile) throws Exception {
-        final JpegImagingParameters params = new JpegImagingParameters();
+        final TiffImagingParameters params = new TiffImagingParameters();
         final boolean ignoreImageData = isPhilHarveyTestImage(imageFile);
         params.setReadThumbnails(!ignoreImageData);
 
