@@ -317,7 +317,7 @@ public class PnmImageParser extends GenericImageParser<PnmImagingParameters> {
     @Override
     public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
-        final PnmImagingParameters pnmParams = getParameters(params);
+        final PnmImagingParameters pnmParams = normalizeParameters(params);
 
         PnmWriter writer = null;
         boolean useRawbits = pnmParams.isRawBits();
@@ -348,12 +348,12 @@ public class PnmImageParser extends GenericImageParser<PnmImagingParameters> {
     }
 
     @Override
-    protected PnmImagingParameters createDefaultParameters() {
+    public PnmImagingParameters getDefaultParameters() {
         return new PnmImagingParameters();
     }
 
     @Override
-    protected PnmImagingParameters createParameters(final ImagingParameters params) {
+    protected PnmImagingParameters copyParameters(final ImagingParameters params) {
         return new PnmImagingParameters(params);
     }
 }

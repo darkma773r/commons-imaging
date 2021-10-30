@@ -623,7 +623,8 @@ public class IcoImageParser extends ImageParser {
     @Override
     public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
-        final PixelDensity pixelDensity = params.getPixelDensity();
+        final ImagingParameters normParams = normalizeParameters(params);
+        final PixelDensity pixelDensity = normParams.getPixelDensity();
 
         final PaletteFactory paletteFactory = new PaletteFactory();
         final SimplePalette palette = paletteFactory.makeExactRgbPaletteSimple(src, 256);
@@ -781,5 +782,10 @@ public class IcoImageParser extends ImageParser {
             }
         }
         bos.close();
+    }
+
+    @Override
+    public ImagingParameters getDefaultParameters() {
+        return new ImagingParameters();
     }
 }

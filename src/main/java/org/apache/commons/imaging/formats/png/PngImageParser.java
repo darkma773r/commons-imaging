@@ -706,7 +706,7 @@ public class PngImageParser extends GenericImageParser<PngImagingParameters>  im
     @Override
     public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
-        final PngImagingParameters pngParams = getParameters(params);
+        final PngImagingParameters pngParams = normalizeParameters(params);
         new PngWriter().writeImage(src, os, pngParams);
     }
 
@@ -742,12 +742,12 @@ public class PngImageParser extends GenericImageParser<PngImagingParameters>  im
     }
 
     @Override
-    protected PngImagingParameters createDefaultParameters() {
+    public PngImagingParameters getDefaultParameters() {
         return new PngImagingParameters();
     }
 
     @Override
-    protected PngImagingParameters createParameters(final ImagingParameters params) {
+    protected PngImagingParameters copyParameters(final ImagingParameters params) {
         return new PngImagingParameters(params);
     }
 }

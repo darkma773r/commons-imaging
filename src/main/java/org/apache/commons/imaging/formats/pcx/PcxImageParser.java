@@ -473,9 +473,11 @@ public class PcxImageParser extends GenericImageParser<PcxImagingParameters> {
 
     @Override
     public BufferedImage getBufferedImage(final ByteSource byteSource,
-            ImagingParameters params) throws ImageReadException, IOException {
+            final ImagingParameters params) throws ImageReadException, IOException {
+        final ImagingParameters normParams = normalizeParameters(params);
+
         try (InputStream is = byteSource.getInputStream()) {
-            final PcxHeader pcxHeader = readPcxHeader(is, params.isStrict());
+            final PcxHeader pcxHeader = readPcxHeader(is, normParams.isStrict());
             return readImage(pcxHeader, is, byteSource);
         }
     }
@@ -483,17 +485,17 @@ public class PcxImageParser extends GenericImageParser<PcxImagingParameters> {
     @Override
     public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
-        PcxImagingParameters pcxParams = getParameters(params);
+        PcxImagingParameters pcxParams = normalizeParameters(params);
         new PcxWriter(pcxParams).writeImage(src, os);
     }
 
     @Override
-    protected PcxImagingParameters createDefaultParameters() {
+    public PcxImagingParameters getDefaultParameters() {
         return new PcxImagingParameters();
     }
 
     @Override
-    protected PcxImagingParameters createParameters(final ImagingParameters params) {
+    protected PcxImagingParameters copyParameters(final ImagingParameters params) {
         return new PcxImagingParameters(params);
     }
 }

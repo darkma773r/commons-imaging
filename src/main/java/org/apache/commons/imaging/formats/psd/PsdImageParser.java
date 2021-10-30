@@ -703,4 +703,8 @@ public class PsdImageParser extends ImageParser implements XmpEmbeddable {
         return new String(block.data, 0, block.data.length, StandardCharsets.UTF_8);
     }
 
+    @Override
+    public ImagingParameters getDefaultParameters() {
+        return new ImagingParameters();
+    }
 }

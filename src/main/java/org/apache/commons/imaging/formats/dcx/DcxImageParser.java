@@ -202,4 +202,9 @@ public class DcxImageParser extends ImageParser {
         final PcxImageParser pcxImageParser = new PcxImageParser();
         pcxImageParser.writeImage(src, bos, params);
     }
+
+    @Override
+    public ImagingParameters getDefaultParameters() {
+        return new ImagingParameters();
+    }
 }

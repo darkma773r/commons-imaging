@@ -131,10 +131,10 @@ public class TiffImageParser extends GenericImageParser<TiffImagingParameters> i
     @Override
     public ImageMetadata getMetadata(final ByteSource byteSource, ImagingParameters params)
             throws ImageReadException, IOException {
-        final TiffImagingParameters tiffParams = getParameters(params);
+        final TiffImagingParameters tiffParams = normalizeParameters(params);
 
         final FormatCompliance formatCompliance = FormatCompliance.getDefault();
-        final TiffReader tiffReader = new TiffReader(params.isStrict());
+        final TiffReader tiffReader = new TiffReader(tiffParams.isStrict());
         final TiffContents contents = tiffReader.readContents(byteSource, tiffParams, formatCompliance);
 
         final List<TiffDirectory> directories = contents.directories;
@@ -463,10 +463,10 @@ public class TiffImageParser extends GenericImageParser<TiffImagingParameters> i
     @Override
     public BufferedImage getBufferedImage(final ByteSource byteSource, ImagingParameters params)
             throws ImageReadException, IOException {
-        final TiffImagingParameters tiffParams = getParameters(params);
+        final TiffImagingParameters tiffParams = normalizeParameters(params);
 
         final FormatCompliance formatCompliance = FormatCompliance.getDefault();
-        final TiffReader reader = new TiffReader(params.isStrict());
+        final TiffReader reader = new TiffReader(tiffParams.isStrict());
         final TiffContents contents = reader.readFirstDirectory(byteSource, true, formatCompliance);
         final ByteOrder byteOrder = reader.getByteOrder();
         final TiffDirectory directory = contents.directories.get(0);
@@ -731,7 +731,7 @@ public class TiffImageParser extends GenericImageParser<TiffImagingParameters> i
     @Override
     public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
-        final TiffImagingParameters tiffParams = getParameters(params);
+        final TiffImagingParameters tiffParams = normalizeParameters(params);
         new TiffImageWriterLossy().writeImage(src, os, tiffParams);
     }
 
@@ -893,12 +893,12 @@ public class TiffImageParser extends GenericImageParser<TiffImagingParameters> i
     }
 
     @Override
-    protected TiffImagingParameters createDefaultParameters() {
+    public TiffImagingParameters getDefaultParameters() {
         return new TiffImagingParameters();
     }
 
     @Override
-    protected TiffImagingParameters createParameters(final ImagingParameters params) {
+    protected TiffImagingParameters copyParameters(final ImagingParameters params) {
         return new TiffImagingParameters(params);
     }
 }

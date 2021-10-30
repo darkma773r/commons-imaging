@@ -644,7 +644,9 @@ public class BmpImageParser extends ImageParser {
     @Override
     public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
-        PixelDensity pixelDensity = params.getPixelDensity();
+        final ImagingParameters normParams = normalizeParameters(params);
+
+        final PixelDensity pixelDensity = normParams.getPixelDensity();
 
         final SimplePalette palette = new PaletteFactory().makeExactRgbPaletteSimple(
                 src, 256);
@@ -698,5 +700,10 @@ public class BmpImageParser extends ImageParser {
         writer.writePalette(bos);
         // write Image Data
         bos.write(imagedata);
+    }
+
+    @Override
+    public ImagingParameters getDefaultParameters() {
+        return new ImagingParameters();
     }
 }

@@ -127,4 +127,9 @@ public class RgbeImageParser extends ImageParser {
             throws ImageReadException, IOException {
         return null;
     }
+
+    @Override
+    public ImagingParameters getDefaultParameters() {
+        return new ImagingParameters();
+    }
 }

@@ -245,4 +245,9 @@ public class WbmpImageParser extends ImageParser {
             }
         }
     }
+
+    @Override
+    public ImagingParameters getDefaultParameters() {
+        return new ImagingParameters();
+    }
 }

@@ -719,4 +719,9 @@ public class XpmImageParser extends ImageParser {
         line = "\n};\n";
         os.write(line.getBytes(StandardCharsets.US_ASCII));
     }
+
+    @Override
+    public ImagingParameters getDefaultParameters() {
+        return new ImagingParameters();
+    }
 }

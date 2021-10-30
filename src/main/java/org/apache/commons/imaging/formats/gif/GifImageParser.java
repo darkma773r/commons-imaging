@@ -844,7 +844,7 @@ public class GifImageParser extends GenericImageParser<XmpImagingParameters> imp
     public void writeImage(final BufferedImage src, final OutputStream os, final ImagingParameters params)
             throws ImageWriteException, IOException {
 
-        final XmpImagingParameters xmpParams = getParameters(params);
+        final XmpImagingParameters xmpParams = normalizeParameters(params);
 
         String xmpXml = xmpParams.getXmpXml();
 
@@ -1137,12 +1137,12 @@ public class GifImageParser extends GenericImageParser<XmpImagingParameters> imp
     }
 
     @Override
-    protected XmpImagingParameters createDefaultParameters() {
+    public XmpImagingParameters getDefaultParameters() {
         return new XmpImagingParameters();
     }
 
     @Override
-    protected XmpImagingParameters createParameters(final ImagingParameters params) {
+    protected XmpImagingParameters copyParameters(final ImagingParameters params) {
         return new XmpImagingParameters(params);
     }
 }

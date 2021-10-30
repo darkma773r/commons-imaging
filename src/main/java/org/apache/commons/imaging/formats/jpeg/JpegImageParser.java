@@ -323,7 +323,7 @@ public class JpegImageParser extends GenericImageParser<TiffImagingParameters> i
     @Override
     public ImageMetadata getMetadata(final ByteSource byteSource, final ImagingParameters params)
             throws ImageReadException, IOException {
-        final TiffImagingParameters tiffParams = getParameters(params);
+        final TiffImagingParameters tiffParams = normalizeParameters(params);
 
         final TiffImageMetadata exif = getExifMetadata(byteSource, tiffParams);
 
@@ -1017,12 +1017,12 @@ public class JpegImageParser extends GenericImageParser<TiffImagingParameters> i
     }
 
     @Override
-    protected TiffImagingParameters createDefaultParameters() {
+    public TiffImagingParameters getDefaultParameters() {
         return new TiffImagingParameters();
     }
 
     @Override
-    protected TiffImagingParameters createParameters(final ImagingParameters params) {
+    protected TiffImagingParameters copyParameters(final ImagingParameters params) {
         return new TiffImagingParameters(params);
     }
 }

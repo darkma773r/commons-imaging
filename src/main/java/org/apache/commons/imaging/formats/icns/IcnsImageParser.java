@@ -289,4 +289,9 @@ public class IcnsImageParser extends ImageParser {
             }
         }
     }
+
+    @Override
+    public ImagingParameters getDefaultParameters() {
+        return new ImagingParameters();
+    }
 }

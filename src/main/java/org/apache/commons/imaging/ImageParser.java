@@ -120,6 +120,12 @@ public abstract class ImageParser extends BinaryFileParser {
     }
 
     /**
+     * Get a default parameters instance for this parser.
+     * @return default parameters instance
+     */
+    public abstract ImagingParameters getDefaultParameters();
+
+    /**
      * Get image metadata from the specified byte source.  Format-specific
      * ImageParser implementations are expected to return a valid
      * IImageMetadata object or to throw an ImageReadException if unable
@@ -933,6 +939,17 @@ public abstract class ImageParser extends BinaryFileParser {
         }
 
         return new SimpleBufferedImageFactory();
+    }
+
+    /**
+     * Get a non-null, normalized imaging parameters object.
+     * @param params
+     * @return
+     */
+    protected ImagingParameters normalizeParameters(final ImagingParameters params) {
+        return params != null ?
+                params :
+                getDefaultParameters();
     }
 
     /**

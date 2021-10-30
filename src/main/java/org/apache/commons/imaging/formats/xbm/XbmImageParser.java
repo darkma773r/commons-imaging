@@ -393,4 +393,9 @@ public class XbmImageParser extends ImageParser {
 
         os.write("\n};\n".getBytes(StandardCharsets.US_ASCII));
     }
+
+    @Override
+    public ImagingParameters getDefaultParameters() {
+        return new ImagingParameters();
+    }
 }

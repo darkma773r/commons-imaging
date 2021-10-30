@@ -23,20 +23,26 @@ package org.apache.commons.imaging;
  */
 public abstract class GenericImageParser<P extends ImagingParameters> extends ImageParser {
 
+    /** Type of parameters object used by this parser. */
     private final Class<P> parametersType;
 
     protected GenericImageParser(final Class<P> parametersType) {
         this.parametersType = parametersType;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public abstract P getDefaultParameters();
+
     /**
      * Get a format-specific parameters instance based on the argument.
      * @param params
      * @return
      */
-    protected P getParameters(final ImagingParameters params) {
+    @Override
+    protected P normalizeParameters(final ImagingParameters params) {
         if (params == null) {
-            return createDefaultParameters();
+            return getDefaultParameters();
         }
         Class<?> actualType = params.getClass();
         if (actualType.equals(parametersType)) {
@@ -47,7 +53,7 @@ public abstract class GenericImageParser<P extends ImagingParameters> extends Im
             // our type; create a new parameters object of the expected
             // type and populate as many fields as possible from the
             // argument
-            return createParameters(params);
+            return copyParameters(params);
         }
 
         throw new IllegalArgumentException("Invalid imaging parameters: expected type " +
@@ -55,17 +61,10 @@ public abstract class GenericImageParser<P extends ImagingParameters> extends Im
     }
 
     /**
-     * Create a format-specific parameters object containing default values. Subclasses
-     * must not return null.
-     * @return
-     */
-    protected abstract P createDefaultParameters();
-
-    /**
      * Create a format-specific parameters object populated with values from
      * the argument. Subclasses must not return null.
      * @param params
      * @return
      */
-    protected abstract P createParameters(final ImagingParameters params);
+    protected abstract P copyParameters(final ImagingParameters params);
 }
